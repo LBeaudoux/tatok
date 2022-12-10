@@ -26,14 +26,12 @@ def get_tokenizer(lang: Lang) -> Callable[[str], List[str]]:
 
 def _get_wordfreq_tokenizer(lang: Lang) -> Callable[[str], List[str]]:
 
-    # The English tokenizer is chosen as asubstitute for the few unrecognized language codes.
     langcode_tokenizer = next(
         (
             getattr(lang, a)
             for a in ("pt1", "pt3", "pt2b", "pt2t", "pt5")
             if getattr(lang, a)
-        ),
-        "eng",
+        )
     )
 
     return lambda s: wf_tokenize(s, langcode_tokenizer)

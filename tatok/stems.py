@@ -1,8 +1,9 @@
-import logging
 from typing import Callable, List, Optional
 
 import Stemmer as PyStemmer
 from iso639 import Lang
+
+from .exceptions import InvalidLanguageValue
 
 STEMMER_ALGOS = {
     "ara": "arabic",
@@ -33,9 +34,6 @@ STEMMER_ALGOS = {
 }
 
 
-logger = logging.getLogger(__name__)
-
-
 def get_word_stemmer(lang: Lang) -> Optional[Callable[[str], List[str]]]:
     """Get a Snowball stemmer that returns the stem of a word
 
@@ -55,8 +53,7 @@ def get_word_stemmer(lang: Lang) -> Optional[Callable[[str], List[str]]]:
     except AttributeError:
         return
     except KeyError:
-        msg = f"{lang.name} is not supported for stemming"
-        logger.warning(msg)
+        raise InvalidLanguageValue(lang, task="stemming")
     else:
         stemmer = PyStemmer.Stemmer(algo_name)
 

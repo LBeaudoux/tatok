@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="tatok",
-    version="0.0.1",
+    version="0.0.2",
     author="L.Beaudoux",
     description="A multilingual text analyzer for the Tatoeba Corpus",
     long_description=long_description,

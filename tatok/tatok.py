@@ -3,7 +3,8 @@ from typing import Callable, List
 
 from iso639 import Lang
 
-from .config import NGRAM_LANGS, TATOEBA_STEMMER_LANGS
+from .config import BACKUP_LANG, NGRAM_LANGS, TATOEBA_STEMMER_LANGS
+from .exceptions import InvalidLanguageValue
 from .lang import get_iso639_lang
 from .ngrams import get_ngrams
 from .stems import get_word_stemmer
@@ -20,14 +21,16 @@ def get_text_analyzer(
     Parameters
     ----------
     language : str
-        a language code as it appears on Tatoeba
+        an ISO 639 language value or a Tatoeba language code
     ngram : bool, optional
-        as in the Manticore Search index, split 1-grams, 2-grams
+        as in the Manticore Search index, splits 1-grams, 2-grams
         and 3-grams instead of tokens for languages with no clear
-        word bounderies, by default False
+        word bounderies, by default False. Not compatible with
+        stemming option.
     stemming : bool, optional
-        as in the Manticore Search index, stem tokens with
-        Snowball stemmers when possible, by default False
+        as in the Manticore Search index, stems tokens with Snowball
+        stemmers when possible, by default False. Not compatible with
+        ngram option.
 
     Returns
     -------
@@ -37,27 +40,30 @@ def get_text_analyzer(
 
     lang = get_iso639_lang(language)
 
-    # the English tokenizer is used by default
+    # switch to a backup language when not ISO 639 language
     if not lang:
-        return get_tokenizer(Lang("eng"))
-    # as Manticore Search does for CJK languages, return 1-grams,
-    # 2-grams and 3-grams when no clear word bounderies
+        backup_lang = Lang(BACKUP_LANG)
+        logger.warning(
+            f"{backup_lang.name} default tokenizer used for '{language}'"
+        )
+        return get_tokenizer(backup_lang)
+    # as Manticore Search does for CJK languages, return 1-grams, 2-grams
+    # and 3-grams when no clear word bounderies
     if ngram:
         if any(getattr(lang, pt) in NGRAM_LANGS for pt in ("pt3", "pt5")):
-            return lambda s: get_ngrams(s, sep="", max_len=3)
+            analyze_text = lambda s: get_ngrams(s, sep="", max_len=3)
         else:
-            logger.warning(f"{lang.name} not supported by n-gram sgementation")
+            raise InvalidLanguageValue(lang, task="n-gram sgementation")
     # macro languages tend to be better recognized by wordfreq
     # e.g. 'zho' favored over 'cmn'
-    if lang.macro():
-        tokenize = get_tokenizer(lang.macro())
+    elif lang.macro():
+        analyze_text = get_tokenizer(lang.macro())
     else:
-        tokenize = get_tokenizer(lang)
-    # stem tokens only for Tatoeba languages also stemmed in
-    # Manticore index
-    if stemming and language in TATOEBA_STEMMER_LANGS:
-        stem_lang = Lang(TATOEBA_STEMMER_LANGS[language])
+        analyze_text = get_tokenizer(lang)
+    # stem tokens only for Tatoeba languages also stemmed in Manticore index
+    if stemming:
+        stem_lang = Lang(TATOEBA_STEMMER_LANGS.get(language, language))
         if stem_word := get_word_stemmer(stem_lang):
-            return lambda s: list(map(stem_word, tokenize(s)))
+            return lambda s: list(map(stem_word, analyze_text(s)))
 
-    return tokenize
+    return analyze_text

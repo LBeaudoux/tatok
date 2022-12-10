@@ -1,3 +1,6 @@
+BACKUP_LANG = "eng"
+
+
 NGRAM_LANGS = {
     "bod",
     "cdo",

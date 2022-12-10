@@ -1,5 +1,7 @@
+import pytest
 from iso639 import Lang
 
+from tatok.exceptions import InvalidLanguageValue
 from tatok.stems import get_word_stemmer
 
 
@@ -16,5 +18,5 @@ class TestStemmer:
 
     def test_kab_stemmer(self):
 
-        stem_word = get_word_stemmer(Lang("kab"))
-        assert stem_word is None
+        with pytest.raises(InvalidLanguageValue):
+            get_word_stemmer(Lang("kab"))

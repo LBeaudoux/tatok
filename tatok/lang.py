@@ -24,7 +24,8 @@ def get_iso639_lang(language: str) -> Lang:
     try:
         lang = Lang(language)
     except InvalidLanguageValue as e:
-        logger.debug(e.msg)
+        msg = f"'{language}' is not a valid ISO 639 language value"
+        logger.warning(msg)
         return
     except DeprecatedLanguageValue as e:
         if e.change_to:
@@ -33,6 +34,6 @@ def get_iso639_lang(language: str) -> Lang:
         else:
             lang = None
             msg = f"{e.name} is deprecated and has no replacement value"
-        logger.debug(msg)
+        logger.warning(msg)
 
     return lang
