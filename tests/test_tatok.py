@@ -69,7 +69,7 @@ class TestGetAnalyzer:
     def test_fra_no_stem(self):
 
         language = "fra"
-        my_text = "Tu m'aimes ?"
+        my_text = "Tu m’aimes ?"
 
         analyze_text = get_text_analyzer(language)
         assert analyze_text(my_text) == ["tu", "m", "aimes"]
@@ -77,7 +77,7 @@ class TestGetAnalyzer:
     def test_fra_with_stem(self):
 
         language = "fra"
-        my_text = "Tu m'aimes ?"
+        my_text = "Tu m’aimes ?"
 
         analyze_text = get_text_analyzer(language, stemming=True)
         assert analyze_text(my_text) == ["tu", "m", "aim"]

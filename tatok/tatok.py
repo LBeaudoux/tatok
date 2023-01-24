@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 def get_text_analyzer(
     language: str, ngram: bool = False, stemming: bool = False
 ) -> Callable[[str], List[str]]:
-    """Get a text segmenter that is suitable for this language
+    """Get a text analyzer that is suitable for this language
 
     Parameters
     ----------

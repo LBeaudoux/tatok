@@ -1,13 +1,23 @@
 # tatok
 
-**tatok** is a multilingual text analyzer. It bundles [wordfreq](https://github.com/rspeer/wordfreq) tokenizers with [Snowball](https://snowballstem.org) stemmers, and allows n-gram segmentation.
+**tatok** is a text analyzer designed to process sentences from the massively multilingual Tatoeba Corpus. 
 
-It has been designed to easily segment sentences from the massively multilingual Tatoeba Corpus.
-
+It bundles:
+- [wordfreq](https://github.com/rspeer/wordfreq) tokenization
+- [ICU](https://icu.unicode.org/) word segmentation
+- [Snowball](https://snowballstem.org) stemming
+- n-gram segmentation
 
 ## Installation
+  
+**tatok** relies on [PyICU](https://gitlab.pyicu.org/main/pyicu), a python extension implemented in C++ that wraps the C/C++ ICU library.
+
+### Ubuntu
 
 ```sh
+apt-get update
+apt-get install python3-icu
+pip install --no-binary=:pyicu: pyicu
 pip install git+https://github.com/LBeaudoux/tatok.git
 ```
 
@@ -21,7 +31,7 @@ from tatok import get_text_analyzer
 
 ### Tokenization
 
-By default, tatok uses the multilingual tokenizer provided by wordfreq:
+tatok uses the wordfreq tokenizer by default and overrides it with an ICU-based tokenizer for some poorly supported languages like Thai or Khmer.
 
 ```python
 >>> analyze_text = get_text_analyzer("en")
