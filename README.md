@@ -16,7 +16,7 @@ It bundles:
 
 ```sh
 apt-get update
-apt-get install python3-icu
+apt-get install pkg-config libicu-dev
 pip install --no-binary=:pyicu: pyicu
 pip install git+https://github.com/LBeaudoux/tatok.git
 ```
