@@ -1,3 +1,5 @@
 env_tatok/
 __pycache__/
 *.ipynb
+.vscode/
+.python-version
