@@ -51,15 +51,24 @@ def get_text_analyzer(
     # and 3-grams when no clear word bounderies
     if ngram:
         if any(getattr(lang, pt) in NGRAM_LANGS for pt in ("pt3", "pt5")):
-            analyze_text = lambda s: get_ngrams(s, sep="", max_len=3)
+
+            def analyze_text(text: str):
+                return get_ngrams(text, sep="", max_len=3)
+
         else:
             raise InvalidLanguageValue(lang, task="n-gram sgementation")
     # macro languages tend to be better recognized by wordfreq
     # e.g. 'zho' favored over 'cmn'
-    elif lang.macro():
-        analyze_text = get_tokenizer(lang.macro())
+    elif macrolang := lang.macro():
+
+        def analyze_text(text: str):
+            return get_tokenizer(macrolang)(text)
+
     else:
-        analyze_text = get_tokenizer(lang)
+
+        def analyze_text(text: str):
+            return get_tokenizer(lang)(text)
+
     # stem tokens only for Tatoeba languages also stemmed in Manticore index
     if stemming:
         stem_lang = Lang(TATOEBA_STEMMER_LANGS.get(language, language))

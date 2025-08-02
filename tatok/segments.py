@@ -1,4 +1,4 @@
-from icu import BreakIterator, Locale
+from icu import BreakIterator, Locale  # type: ignore
 
 _break_iterator = None
 

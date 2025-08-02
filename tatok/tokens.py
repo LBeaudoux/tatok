@@ -3,11 +3,11 @@ from typing import Callable, List
 import langcodes
 import regex
 from iso639 import Lang
-from wordfreq import simple_tokenize
 from wordfreq.chinese import jieba_tokenize
 from wordfreq.language_info import get_language_info
 from wordfreq.mecab import mecab_tokenize
 from wordfreq.preprocess import preprocess_text
+from wordfreq.tokens import simple_tokenize
 
 from .segments import segment
 
@@ -33,16 +33,14 @@ def get_tokenizer(lang: Lang) -> Callable[[str], List[str]]:
     """
     langcode = _pick_langcode(lang)
     language = langcodes.get(langcode)
-
     info = get_language_info(language)
 
-    if info["tokenizer"] == "mecab":
-
-        assert language.language is not None
+    if info["tokenizer"] == "mecab" and isinstance(language.language, str):
+        language_language = language.language
 
         def tokenize(text):
             text = _preprocess_text(text, language)
-            tokens = mecab_tokenize(text, language.language)
+            tokens = mecab_tokenize(text, language_language)
             return [token for token in tokens if not PUNCT_RE.match(token)]
 
     elif info["tokenizer"] == "jieba":
@@ -86,12 +84,12 @@ def _pick_langcode(lang: Lang) -> str:
     )
 
 
-def _preprocess_text(text: str, language: str):
+def _preprocess_text(text: str, language: langcodes.Language):
 
     # replace no-break and narrow no-break spaces because not taken
     # into account by the wordfreq tokenizer
     # Especially required for French.
-    text = text.replace("\u00A0", " ").replace("\u202F", " ")
+    text = text.replace("\u00a0", " ").replace("\u202f", " ")
     # replace right single quotation marks by apostrophes because
     # the wordfreq tokenizer does not consider right single quotation
     # marks as word bounderies

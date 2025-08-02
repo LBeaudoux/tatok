@@ -6,7 +6,7 @@ from iso639.exceptions import DeprecatedLanguageValue, InvalidLanguageValue
 logger = logging.getLogger(__name__)
 
 
-def get_iso639_lang(language: str) -> Lang:
+def get_iso639_lang(language: str) -> Lang | None:
     """Get a Lang instance that handle the ISO 639 codes of the
     passed language
 
@@ -17,13 +17,13 @@ def get_iso639_lang(language: str) -> Lang:
 
     Returns
     -------
-    iso639.Lang
+    iso639.Lang | None
         a Lang instance of the language passed as aurgument when this
         one is recognized. None is returned otherwise.
     """
     try:
         lang = Lang(language)
-    except InvalidLanguageValue as e:
+    except InvalidLanguageValue:
         msg = f"'{language}' is not a valid ISO 639 language value"
         logger.warning(msg)
         return
