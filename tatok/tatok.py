@@ -1,5 +1,5 @@
 import logging
-from typing import Callable, List
+from typing import Callable
 
 from iso639 import Lang
 
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 def get_text_analyzer(
     language: str, ngram: bool = False, stemming: bool = False
-) -> Callable[[str], List[str]]:
+) -> Callable[[str], list[str]]:
     """Get a text analyzer that is suitable for this language
 
     Parameters
@@ -34,7 +34,7 @@ def get_text_analyzer(
 
     Returns
     -------
-    Callable[[str], List[str]]
+    Callable[[str], list[str]]
         the segmented text
     """
 

@@ -1,4 +1,4 @@
-from typing import Callable, List, Optional
+from typing import Callable
 
 import Stemmer as PyStemmer
 from iso639 import Lang
@@ -34,7 +34,7 @@ STEMMER_ALGOS = {
 }
 
 
-def get_word_stemmer(lang: Lang) -> Optional[Callable[[str], List[str]]]:
+def get_word_stemmer(lang: Lang) -> Callable[[str], list[str]] | None:
     """Get a Snowball stemmer that returns the stem of a word
 
     In linguistic morphology, stemming is the process of reducing

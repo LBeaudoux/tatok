@@ -1,9 +1,6 @@
-from typing import List, Optional
-
-
 def get_ngrams(
-    any_text: str, sep: str = "", max_len: Optional[int] = None
-) -> List[str]:
+    any_text: str, sep: str = "", max_len: int | None = None
+) -> list[str]:
     """Get all possible n-grams of a text
 
     Parameters
@@ -18,7 +15,7 @@ def get_ngrams(
 
     Returns
     -------
-    List[str]
+    list[str]
         all n-grams found ordered by ascending size and position in the text
     """
 

@@ -1,11 +1,9 @@
-from typing import List
-
 from icu import BreakIterator, Locale
 
 _break_iterator = None
 
 
-def segment(text: str, language_code: str) -> List[str]:
+def segment(text: str, language_code: str) -> list[str]:
     """Segment a text around the bounderies of its words in accordance with
     the rules specified by Unicode Standard Annex #29, Unicode Text
     Segmentation (https://www.unicode.org/reports/tr29/ )
@@ -19,7 +17,7 @@ def segment(text: str, language_code: str) -> List[str]:
 
     Returns
     -------
-    List[str]
+    list[str]
         the list of "word segments". All characters (space and punctuation
         included) are preserved
     """
