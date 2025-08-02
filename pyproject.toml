@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tatok"
-version = "0.0.3"
+version = "0.0.4"
 description = "A multilingual text analyzer for the Tatoeba Corpus"
 readme = "README.md"
 requires-python = ">=3.10"
